@@ -894,17 +894,17 @@ public abstract class AbstractNavigationStateRenderer
             Component routeTarget) {
 
         Supplier<String> lookForTitleInTarget = () -> lookForTitleInTarget(
-                routeTarget).map(PageTitle::value).orElse("");
+                routeTarget).map(PageTitle::value).orElse(null);
 
         // check for HasDynamicTitle in current router targets chain
-        String title = navigationEvent.getUI().getInternals()
+        Optional<String> title = Optional.ofNullable(navigationEvent.getUI().getInternals()
                 .getActiveRouterTargetsChain().stream()
                 .filter(HasDynamicTitle.class::isInstance)
                 .map(tc -> ((HasDynamicTitle) tc).getPageTitle())
                 .filter(Objects::nonNull).findFirst()
-                .orElseGet(lookForTitleInTarget);
+                .orElseGet(lookForTitleInTarget));
 
-        navigationEvent.getUI().getPage().setTitle(title);
+        title.ifPresent( t-> navigationEvent.getUI().getPage().setTitle(t));
     }
 
     private static Optional<PageTitle> lookForTitleInTarget(

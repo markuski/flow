@@ -1891,10 +1891,12 @@ public class RouterTest extends RoutingTestBase {
             throws InvalidRouteConfigurationException {
         setNavigationTargets(ChildWithoutTitle.class);
 
+        var titleBeforeNavigation = "Custom Title";
+        ui.getPage().setTitle(titleBeforeNavigation);
         router.navigate(ui, new Location("parent-with-title/child"),
                 NavigationTrigger.PROGRAMMATIC);
 
-        Assert.assertEquals("", ui.getInternals().getTitle());
+        Assert.assertEquals(titleBeforeNavigation, ui.getInternals().getTitle());
     }
 
     @Test
